@@ -1,0 +1,6 @@
+// From Database Dir
+dotnet ef --startup-project ..\Smile.Assistant.V2.Micro.OrganisationService migrations add Init
+
+
+// From Project Dir
+dotnet ef database update
