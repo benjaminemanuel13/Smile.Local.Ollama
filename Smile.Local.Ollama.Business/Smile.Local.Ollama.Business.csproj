@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Smile.Local.Ollama.Common\Smile.Local.Ollama.Common.csproj" />
+    <ProjectReference Include="..\Smile.Local.Ollama.Data\Smile.Local.Ollama.Data.csproj" />
   </ItemGroup>
 
 </Project>
