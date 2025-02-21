@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Smile.Local.Ollama.Business.Services;
 using Smile.Local.Ollama.Business.Services.Interfaces;
 using Smile.Local.Ollama.Data;
@@ -16,7 +17,11 @@ namespace Smile.Local.Ollama
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddTransient<IDBContext, DBContext>();
             builder.Services.AddTransient<IOllamaService, OllamaService>();
+            builder.Services.AddTransient<IPdfDocumentService, PdfDocumentService>();
+            builder.Services.AddTransient<IWordDocumentService, WordDocumentService>();
 
             var app = builder.Build();
 
