@@ -114,7 +114,11 @@ namespace Smile.Local.Ollama.Business.Services
 
             try
             {
-                HttpResponseMessage response = await client.PostAsync(baseUrl + "api/chat", content, CancellationToken.None);
+                HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, baseUrl + "api/chat") { 
+                    Content = content
+                };
+
+                HttpResponseMessage response = await client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead);
 
                 if (response.IsSuccessStatusCode)
                 {

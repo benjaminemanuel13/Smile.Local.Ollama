@@ -26,6 +26,8 @@ namespace Smile.Local.Ollama.Console
             {
                 _ollama.Ask(entry, WriteOut).Wait();
 
+                System.Console.WriteLine();
+                System.Console.WriteLine();
                 System.Console.WriteLine("Enter a message to send to the chatbot or type 'quit' to exit:");
                 entry = System.Console.ReadLine();
             }
