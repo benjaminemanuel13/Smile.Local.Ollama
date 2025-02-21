@@ -19,3 +19,4 @@ Ollama now working but not with Documents yet, only streaming chat supported jus
 **Another Update**
 
 Have added document upload function and Ollama chat AskDocuments is also written, not tested yet.
+(may need to normalise the embeddings - not sure yet)
