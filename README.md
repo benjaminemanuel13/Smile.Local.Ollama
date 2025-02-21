@@ -9,3 +9,4 @@ Not hooked into Ollama yet but tried and tested with Symantic Kernel Onnx Runtim
 # (Update)
 
 Ollama now working but not with Documents yet, only streaming chat supported just now.
+(see Smile.Local.Ollama.Console)
