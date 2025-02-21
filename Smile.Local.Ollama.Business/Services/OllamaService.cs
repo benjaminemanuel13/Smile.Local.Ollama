@@ -52,6 +52,12 @@ namespace Smile.Local.Ollama.Business.Services
             }
         }
 
+        private float[] Normalize(float[] embedding)
+        {
+            var norm = Math.Sqrt(embedding.Sum(x => x * x));
+            return embedding.Select(x => (float)(x / norm)).ToArray();
+        }
+
         public async Task AskDocuments(string prompt, Action<string> sendTo, string model = "phi4")
         {
             var docs = _db.GetDocuments(prompt);
