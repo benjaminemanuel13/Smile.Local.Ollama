@@ -10,6 +10,8 @@ namespace Smile.Local.Ollama.Business.Services.Interfaces
     {
         Task<float[][]> GetEmbeddings(string text, string model = "all-minilm");
 
-        Task AskDocuments(string prompt, Action<string> sendTo);
+        Task Ask(string prompt, Action<string> sendTo, string model = "phi4");
+
+        Task AskDocuments(string prompt, Action<string> sendTo, string model = "phi4");
     }
 }

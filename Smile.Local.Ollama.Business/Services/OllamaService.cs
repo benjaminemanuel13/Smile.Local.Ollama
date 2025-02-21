@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
+﻿using DocumentFormat.OpenXml.Validation;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Smile.Local.Ollama.Business.Services.Interfaces;
@@ -17,7 +18,7 @@ namespace Smile.Local.Ollama.Business.Services
     {
         private readonly IDBContext _db;
 
-        public OllamaService(DBContext db)
+        public OllamaService(IDBContext db)
         {
             _db = db;
         }
@@ -51,7 +52,7 @@ namespace Smile.Local.Ollama.Business.Services
             }
         }
 
-        public async Task AskDocuments(string prompt, Action<string> sendTo)
+        public async Task AskDocuments(string prompt, Action<string> sendTo, string model = "phi4")
         {
             var docs = _db.GetDocuments(prompt);
 
@@ -78,12 +79,66 @@ namespace Smile.Local.Ollama.Business.Services
             prompt = sb.ToString();
             prompt += "<|end|><|assistant|>";
 
-            // Get Answer From Ollama into text and:
-            // sendTo(text);
-
-            //Run(prompt, sendTo);
+            await GetStreamAndSend(prompt, sendTo, model);
 
             sendTo("\r\n\r\n");
+        }
+
+        public async Task Ask(string prompt, Action<string> sendTo, string model = "phi4")
+        {            
+            prompt = "<|system|>You are an assistant who answers questions<|end|><|user|>" + prompt + "<|end|><|assistant|>";
+
+            await GetStreamAndSend(prompt, sendTo, model);
+        }
+
+        private async Task GetStreamAndSend(string prompt, Action<string> sendTo, string model)
+        {
+            HttpClient client = new HttpClient();
+
+            ChatRequest chatRequest = new ChatRequest()
+            {
+                model = model,
+                messages = new List<ChatMessage>()
+                {
+                    new ChatMessage()
+                    {
+                        role = "user",
+                        content = prompt
+                    }
+                },
+                stream = true
+            };
+
+            string json = JsonConvert.SerializeObject(chatRequest);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            try
+            {
+                HttpResponseMessage response = await client.PostAsync(baseUrl + "api/chat", content, CancellationToken.None);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    response.EnsureSuccessStatusCode();
+                    using (Stream responseStream = await response.Content.ReadAsStreamAsync())
+                    {
+                        using (StreamReader reader = new StreamReader(responseStream))
+                        {
+                            while (!reader.EndOfStream)
+                            {
+                                string line = await reader.ReadLineAsync();
+
+                                var resp = JsonConvert.DeserializeObject<ChatResponse>(line);
+
+                                sendTo(resp.message.content);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                sendTo("Sorry, I am not able to answer this question.");
+            }
         }
     }
 }
