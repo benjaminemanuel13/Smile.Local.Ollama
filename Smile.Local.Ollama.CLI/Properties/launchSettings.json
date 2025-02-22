@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Smile.Local.Ollama.CLI": {
+      "commandName": "Project",
+      "commandLineArgs": "upload \"C:\\Users\\Ben\\OneDrive\\Documents\\CV\\Curriculum Vitae.docx\""
+    }
+  }
+}

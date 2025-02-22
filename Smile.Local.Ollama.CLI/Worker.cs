@@ -1,0 +1,36 @@
+﻿using Microsoft.Extensions.Hosting;
+using Smile.Local.Ollama.Business.Services.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Smile.Local.Ollama.CLI
+{
+    public class Worker : BackgroundService
+    {
+        private readonly IOllamaService _ollama;
+
+        public Worker(IOllamaService ollama)
+        {
+            _ollama = ollama;
+        }
+
+        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            var args = Program.Args;
+            args.Select(x => x.ToLower()).ToList();
+
+            switch (args[0])
+            {
+                case "upload":
+                    var stream = File.OpenRead(args[1]);
+                    _ollama.UploadDocument(args[1], stream).Wait();
+                    break;
+            }
+
+            return Task.CompletedTask;
+        }
+    }
+}

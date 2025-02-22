@@ -13,6 +13,9 @@ namespace Smile.Local.Ollama.Sql
         [Microsoft.SqlServer.Server.SqlProcedure]
         public static int DoRest(string url, string method, string credential, string payload, out string response)
         {
+            System.Net.ServicePointManager.ServerCertificateValidationCallback =
+            (sender, certificate, chain, sslPolicyErrors) => true;
+
             // Data to be sent in the POST request
             string postData = payload;
 

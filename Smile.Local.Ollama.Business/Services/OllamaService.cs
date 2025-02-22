@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Validation;
+﻿using DocumentFormat.OpenXml.ExtendedProperties;
+using DocumentFormat.OpenXml.Validation;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -11,21 +12,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Schema;
+using static System.Net.WebRequestMethods;
 
 namespace Smile.Local.Ollama.Business.Services
 {
     public class OllamaService : IOllamaService
     {
         private readonly IDBContext _db;
+        private readonly IPdfDocumentService _pdf;
+        private readonly IWordDocumentService _word;
 
-        public OllamaService(IDBContext db)
+        public OllamaService(IDBContext db, IPdfDocumentService pdf, IWordDocumentService word)
         {
             _db = db;
+            _pdf = pdf;
+            _word = word;
         }
 
         private string baseUrl = "http://localhost:11434/";
 
-        public async Task<float[][]> GetEmbeddings(string text, string model = "all-minilm")
+        public async Task<EmbeddingsModel> GetEmbeddings(string text, string model = "mxbai-embed-large")
         {
             var url = baseUrl + "api/embed";
 
@@ -44,7 +50,21 @@ namespace Smile.Local.Ollama.Business.Services
             {
                 var data = await res.Content.ReadAsStringAsync();
                 var embeddings = JsonConvert.DeserializeObject<EmbeddingResponse>(data);
-                return embeddings.embeddings;
+
+                //float[] norm = Normalize(embeddings.embeddings[0]);
+                //embeddings.embeddings[0] = norm;
+
+                var mode = new EmbeddingsModel()
+                {
+                    data = new List<EmbeddingModel>() {
+                    new EmbeddingModel(){
+                        embedding = embeddings.embeddings[0]
+
+                    }
+                }
+                };
+
+                return mode;
             }
             else
             {
@@ -149,6 +169,60 @@ namespace Smile.Local.Ollama.Business.Services
             {
                 sendTo("Sorry, I am not able to answer this question.");
             }
+        }
+
+        public async Task UploadDocument(string filename, Stream file)
+        {
+            filename = Path.GetFileName(filename).ToLower();
+            var path = Directory.GetCurrentDirectory() + "\\Temp\\";
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            var fullname = path + filename;
+
+            using (var fileStream = new FileStream(fullname, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+
+            string data = string.Empty;
+
+            try
+            {
+                if (filename.ToLower().EndsWith(".docx"))
+                {
+                    data = _word.TextFromWord(fullname);
+                }
+                else if (filename.ToLower().EndsWith(".pdf"))
+                {
+                    data = _pdf.Extract(fullname);
+                }
+                else if (filename.ToLower().EndsWith(".txt") || filename.ToLower().EndsWith(".json") || filename.ToLower().EndsWith(".csv"))
+                {
+                    var stream = System.IO.File.Open(fullname, FileMode.Open);
+                    StreamReader reader = new StreamReader(stream);
+
+                    data = reader.ReadToEnd();
+
+                    reader.Close();
+                    stream.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                
+            }
+
+            float[] embeddings = (await GetEmbeddings(data)).data[0].embedding;
+
+            var id = _db.SaveDocument("title", data);
+
+            _db.SaveDocumentEmbeddings(id, embeddings);
+
+            System.IO.File.Delete(fullname);
         }
     }
 }

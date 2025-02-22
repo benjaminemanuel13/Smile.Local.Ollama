@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smile.Local.Ollama.Common",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smile.Local.Ollama.Console", "Smile.Local.Ollama.Console\Smile.Local.Ollama.Console.csproj", "{D86D5FB9-05F5-4B34-99F8-32C801B06E1E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Smile.Local.Ollama.CLI", "Smile.Local.Ollama.CLI\Smile.Local.Ollama.CLI.csproj", "{44469D5C-925D-4EE5-B450-A949A08E6270}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{D86D5FB9-05F5-4B34-99F8-32C801B06E1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D86D5FB9-05F5-4B34-99F8-32C801B06E1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D86D5FB9-05F5-4B34-99F8-32C801B06E1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44469D5C-925D-4EE5-B450-A949A08E6270}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44469D5C-925D-4EE5-B450-A949A08E6270}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44469D5C-925D-4EE5-B450-A949A08E6270}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44469D5C-925D-4EE5-B450-A949A08E6270}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -13,7 +13,7 @@ namespace Smile.Local.Ollama.Data
 {
     public class DBContext : IDBContext
     {
-        private string conn = "Server=DESKTOP-CH8V84O\\SQLEXPRESS;Database=smile-local;User Id=aiuser;Password=n7gHiuB27.;";
+        private string conn = "Server=DESKTOP-CH8V84O\\SQLEXPRESS;Database=smile-local;User Id=aiuser;Password=n7gHiuB27.;TrustServerCertificate=True;";
 
         public void SaveDocumentEmbeddings(int id, float[] embeddings)
         {
@@ -62,7 +62,7 @@ namespace Smile.Local.Ollama.Data
             return id;
         }
 
-        public List<string> GetDocuments(string text)
+        public List<string> GetDocuments(string text/*, float[] embeddings*/)
         {
             SqlConnection con = new SqlConnection(conn);
             con.Open();
@@ -76,6 +76,8 @@ namespace Smile.Local.Ollama.Data
 
             cmd.Parameters.Add(new SqlParameter("@text", text));
             cmd.Parameters.Add(new SqlParameter("@threshold", 0.45));
+
+            //cmd.Parameters.Add(new SqlParameter("@embeddings", JsonSerializer.Serialize(embeddings)));
 
             var recs = cmd.ExecuteReader();
 
