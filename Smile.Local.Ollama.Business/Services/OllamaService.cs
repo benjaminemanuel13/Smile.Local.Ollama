@@ -51,17 +51,14 @@ namespace Smile.Local.Ollama.Business.Services
                 var data = await res.Content.ReadAsStringAsync();
                 var embeddings = JsonConvert.DeserializeObject<EmbeddingResponse>(data);
 
-                //float[] norm = Normalize(embeddings.embeddings[0]);
-                //embeddings.embeddings[0] = norm;
-
                 var mode = new EmbeddingsModel()
                 {
                     data = new List<EmbeddingModel>() {
-                    new EmbeddingModel(){
-                        embedding = embeddings.embeddings[0]
+                        new EmbeddingModel(){
+                            embedding = embeddings.embeddings[0]
 
+                        }
                     }
-                }
                 };
 
                 return mode;
