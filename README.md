@@ -21,7 +21,11 @@ Add path to smile.exe where yours is:
 eg. C:\Users\<user>\source\repos\Smile.Local.Ollama\Smile.Local.Ollama.CLI\bin\Debug\net8.0\smile.exe
 
 Commands:
+
 smile upload "Path to file to upload"
+
 smile ask "Your question"
+
 smile ask-documents "Your question"
+
 
