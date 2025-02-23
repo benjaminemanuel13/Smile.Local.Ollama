@@ -36,4 +36,6 @@ smile ask-documents "Your question"
 
 You need the Smile.Local.Ollama web project running to use smile.exe
 
+**Contact Me**
 
+If you have found this useful please let me know at: **benjaminemanuel13@gmail.com**
