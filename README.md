@@ -17,12 +17,12 @@ Ollama is now working with Documents, but only implemented with the CLI project.
 
 **CLI Commands**
 
-Rename Smile.Local.Ollama.CLI.exe smile.exe and
-(found in C:\Users\<user>\source\repos\Smile.Local.Ollama\Smile.Local.Ollama.CLI\bin\Debug\net8.0\)
+Rename Smile.Local.Ollama.CLI.exe to smile.exe and
+(found in C:\Users\\<user>\source\repos\Smile.Local.Ollama\Smile.Local.Ollama.CLI\bin\Debug\net8.0\)
 
 Add path to smile.exe where yours is:
 
-eg. C:\Users\<user>\source\repos\Smile.Local.Ollama\Smile.Local.Ollama.CLI\bin\Debug\net8.0\smile.exe
+eg. C:\Users\\<user>\source\repos\Smile.Local.Ollama\Smile.Local.Ollama.CLI\bin\Debug\net8.0\smile.exe
 
 Commands:
 
