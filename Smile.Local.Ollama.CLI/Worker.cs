@@ -28,6 +28,12 @@ namespace Smile.Local.Ollama.CLI
                     var stream = File.OpenRead(args[1]);
                     _ollama.UploadDocument(args[1], stream).Wait();
                     break;
+                case "ask-documents":
+                    _ollama.AskDocuments(args[1], Console.Write).Wait();
+                    break;
+                case "ask":
+                    _ollama.Ask(args[1], Console.Write).Wait();
+                    break;
             }
 
             return Task.CompletedTask;
