@@ -13,10 +13,15 @@ and the models I am using are "all-minilm" for embeddings and "phi4" for chat.
 
 **Update**
 
-Ollama now working but not with Documents yet, only streaming chat supported just now.
-(see Smile.Local.Ollama.Console)
+Ollama is now working with Documents, but only implemented with the CLI project. (see Smile.Local.Ollama.CLI)
 
-**Another Update**
+**CLI Commands**
 
-Have added document upload function and Ollama chat AskDocuments is also written, not tested yet.
-(may need to normalise the embeddings - not sure yet)
+Add path to smile.exe where yours is:
+eg. C:\Users\<user>\source\repos\Smile.Local.Ollama\Smile.Local.Ollama.CLI\bin\Debug\net8.0\smile.exe
+
+Commands:
+smile upload "Path to file to upload"
+smile ask "Your question"
+smile ask-documents "Your question"
+
