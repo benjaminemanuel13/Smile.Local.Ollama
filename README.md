@@ -9,7 +9,7 @@ Not hooked into Ollama yet but tried and tested with Symantic Kernel Onnx Runtim
 **Please Note:**
 
 The system I am using for this project is a Windows 11/24Gb memory/Core i7 with a Tesla T4 GPU with 16Gb memory
-and the models I am using are "all-minilm" for embeddings and "phi4" for chat.
+and the models I am using are "mxbai-embed-large" for embeddings and "phi4" for chat.
 
 **Update**
 
