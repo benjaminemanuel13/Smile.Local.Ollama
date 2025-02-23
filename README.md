@@ -28,4 +28,8 @@ smile ask "Your question"
 
 smile ask-documents "Your question"
 
+**Remember**
+
+You need the Smile.Local.Ollama web project running to use smile.exe
+
 
