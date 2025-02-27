@@ -15,6 +15,8 @@ and the models I am using are "mxbai-embed-large" for embeddings and "phi4" for 
 
 Ollama is now working with Documents, but only implemented with the CLI project. (see Smile.Local.Ollama.CLI)
 
+Have just added Image analysis.
+
 **CLI Commands**
 
 Rename Smile.Local.Ollama.CLI.exe to smile.exe and
@@ -31,6 +33,9 @@ smile upload "Path to file to upload"
 smile ask "Your question"
 
 smile ask-documents "Your question"
+
+smile analyse "path to image file" "prompt"
+
 
 **Remember**
 
