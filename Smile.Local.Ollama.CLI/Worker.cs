@@ -34,6 +34,9 @@ namespace Smile.Local.Ollama.CLI
                 case "ask":
                     _ollama.Ask(args[1], Console.Write).Wait();
                     break;
+                case "analyse":
+                    _ollama.AnalyseImage(args[1], args[2], Console.Write).Wait();
+                    break;
             }
 
             return Task.CompletedTask;

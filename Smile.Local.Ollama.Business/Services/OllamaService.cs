@@ -221,5 +221,60 @@ namespace Smile.Local.Ollama.Business.Services
 
             System.IO.File.Delete(fullname);
         }
+
+        public async Task AnalyseImage(string path, string prompt, Action<string> sendTo, string model = "llama3.2-vision")
+        {
+            using (FileStream stream = System.IO.File.Open(path, FileMode.Open))
+            {
+                byte[] bytes = new BinaryReader(stream).ReadBytes((int)stream.Length);
+                string encoded = Convert.ToBase64String(bytes);
+
+                var url = baseUrl + "api/generate"; ;
+
+                var req = new ImageRequest()
+                {
+                    model = model,
+                    prompt = prompt,
+                    images = new string[] { encoded }
+                };
+
+                string json = JsonConvert.SerializeObject(req);
+                StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                HttpClient client = new HttpClient();
+
+                try
+                {
+                    HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, baseUrl + "api/generate")
+                    {
+                        Content = content
+                    };
+
+                    HttpResponseMessage response = await client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        response.EnsureSuccessStatusCode();
+                        using (Stream responseStream = await response.Content.ReadAsStreamAsync())
+                        {
+                            using (StreamReader reader = new StreamReader(responseStream))
+                            {
+                                while (!reader.EndOfStream)
+                                {
+                                    string line = await reader.ReadLineAsync();
+
+                                    var resp = JsonConvert.DeserializeObject<ImageResponse>(line);
+
+                                    sendTo(resp.response);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                { 
+                }
+            }
+        }
     }
 }

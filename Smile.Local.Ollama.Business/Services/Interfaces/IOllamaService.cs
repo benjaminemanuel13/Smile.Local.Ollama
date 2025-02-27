@@ -17,5 +17,7 @@ namespace Smile.Local.Ollama.Business.Services.Interfaces
         Task AskDocuments(string prompt, Action<string> sendTo, string model = "phi4");
 
         Task UploadDocument(string filename, Stream file);
+
+        Task AnalyseImage(string path, string prompt, Action<string> sendTo, string model = "llama3.2-vision");
     }
 }

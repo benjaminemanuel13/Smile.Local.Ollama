@@ -2,7 +2,7 @@
   "profiles": {
     "Smile.Local.Ollama.CLI": {
       "commandName": "Project",
-      "commandLineArgs": "ask-documents \"Where does ben work?\""
+      "commandLineArgs": "analyse \"C:\\Users\\Ben\\OneDrive\\Pictures\\ID\\licence.png\" \"Describe this image\""
     }
   }
 }
