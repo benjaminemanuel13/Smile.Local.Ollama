@@ -45,7 +45,7 @@ You need the Smile.Local.Ollama web project running to use smile.exe
 
 If you have found this useful please let me know at: **benjaminemanuel13@gmail.com**
 
-** Coming Soon**
+**Coming Soon**
 
 Soon I hope to use not just documents as data source but also CSV and Json files as well
 as Stored Procedures (SQL Server) as data sources.
