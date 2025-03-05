@@ -53,5 +53,7 @@ as Stored Procedures (SQL Server) as data sources.
 This would mean having a command such as:
 
 smile upload-data "Path to file to upload" "This would be a sentence or two to describe the data for vector search"
+
 &
+
 smile ask-data "Your question"
