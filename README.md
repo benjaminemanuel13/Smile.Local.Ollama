@@ -44,3 +44,14 @@ You need the Smile.Local.Ollama web project running to use smile.exe
 **Contact Me**
 
 If you have found this useful please let me know at: **benjaminemanuel13@gmail.com**
+
+** Coming Soon**
+
+Soon I hope to use not just documents as data source but also CSV and Json files as well
+as Stored Procedures (SQL Server) as data sources.
+
+This would mean having a command such as:
+
+smile upload-data "Path to file to upload" "This would be a sentence or two to describe the data for vector search"
+&
+smile ask-data "Your question"
