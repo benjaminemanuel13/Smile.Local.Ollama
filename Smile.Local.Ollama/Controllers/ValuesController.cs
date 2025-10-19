@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Smile.Local.Ollama.Business.Services.Interfaces;
+using Smile.Local.Ollama.Common;
 using Smile.Local.Ollama.Common.Ollama;
 using Smile.Local.Ollama.Models;
 using static System.Net.WebRequestMethods;
@@ -38,6 +39,26 @@ namespace Smile.Local.Ollama.Controllers
             var file = _http.HttpContext.Request.Form.Files[0];
 
             await _ollama.UploadDocument(file.FileName, file.OpenReadStream());
+        }
+
+        public async Task<IActionResult> Ask([FromBody] AskModel model)
+        {
+            await _ollama.Ask(model.question, async (response) =>
+            {
+                await Response.WriteAsync(response);
+                await Response.Body.FlushAsync();
+            });
+            return new EmptyResult();
+        }
+
+        public async Task<IActionResult> AskDocuments([FromBody] AskDocumentsModel model)
+        {
+            await _ollama.AskDocuments(model.question, async (response) =>
+            {
+                await Response.WriteAsync(response);
+                await Response.Body.FlushAsync();
+            });
+            return new EmptyResult();
         }
     }
 }
