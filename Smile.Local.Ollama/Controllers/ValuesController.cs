@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Smile.Local.Ollama.Business.Services.Interfaces;
 using Smile.Local.Ollama.Common.Ollama;
-using Smile.Local.Ollama.Data;
 using Smile.Local.Ollama.Models;
 using static System.Net.WebRequestMethods;
 
@@ -14,17 +13,17 @@ namespace Smile.Local.Ollama.Controllers
     {
         private readonly IOllamaService _ollama;
         private readonly IHttpContextAccessor _http;
-        private readonly IPdfDocumentService _pdf;
+        /*private readonly IPdfDocumentService _pdf;
         private readonly IWordDocumentService _word;
-        private readonly IDBContext _db;
+        private readonly IDBContext _db;*/
 
-        public ValuesController(IOllamaService ollama, IHttpContextAccessor http, IPdfDocumentService pdf, IWordDocumentService word, IDBContext db)
+        public ValuesController(IOllamaService ollama, IHttpContextAccessor http /*, IPdfDocumentService pdf, IWordDocumentService word, IDBContext db*/)
         {
             _ollama = ollama;
             _http = http;
-            _pdf = pdf;
+            /*_pdf = pdf;
             _word = word;
-            _db = db;
+            _db = db;*/
         }
 
         [HttpPost("/embeddings")]
@@ -38,7 +37,7 @@ namespace Smile.Local.Ollama.Controllers
         {
             var file = _http.HttpContext.Request.Form.Files[0];
 
-            _ollama.UploadDocument(file.FileName, file.OpenReadStream());
+            await _ollama.UploadDocument(file.FileName, file.OpenReadStream());
         }
     }
 }

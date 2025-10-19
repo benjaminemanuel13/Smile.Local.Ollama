@@ -1,0 +1,42 @@
+﻿@using Smile.Local.Ollama.Agent.Components.Models
+@using Smile.Local.Ollama.Agent.Components.Properties
+
+<div class="sliding-panel @(IsOpen ? "open" : "")">
+    <button style="float: right;" @onclick="ClosePanel">Close >></button>
+    @if(ShapeType == ShapeType.ChatInit)
+    {
+        <ChatInitProperty />
+    }
+    else if(ShapeType == ShapeType.Agent)
+    {
+        <AgentProperty />
+    }
+    else if(ShapeType == ShapeType.Plugin)
+    {
+        <PluginProperty />
+    }
+    else if(ShapeType == ShapeType.ScheduledInit)
+    {
+        <ScheduledInitProperty />
+    }
+</div>
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter] public ShapeType ShapeType { get; set; }
+
+    private async Task ClosePanel()
+    {
+        IsOpen = false;
+        await IsOpenChanged.InvokeAsync(IsOpen);
+    }
+
+    public void SetShapeType(ShapeType shapeType)
+    {
+        ShapeType = shapeType;
+        StateHasChanged();
+    }
+}

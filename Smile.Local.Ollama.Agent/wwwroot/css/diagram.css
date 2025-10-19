@@ -1,0 +1,62 @@
+﻿body {
+}
+
+.canvas {
+    width: 100%;
+    height: 90vh;
+    background-color: #f0f0f0;
+    position: relative;
+    overflow: hidden;
+}
+
+.shape {
+    position: absolute;
+    border: 2px solid #444;
+    background-color: white;
+    padding: 10px;
+    cursor: move;
+    user-select: none;
+}
+
+.rectangle {
+    width: 100px;
+    height: 60px;
+}
+
+.circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+.connector-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.selected {
+    border-color: blue;
+    box-shadow: 0 0 5px blue;
+}
+
+.sliding-panel {
+    position: fixed;
+    top: 0;
+    right: -320px;
+    width: 300px;
+    height: 100%;
+    background-color: #f8f8f8;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+    transition: right 0.4s ease-in-out;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.sliding-panel.open {
+    right: 0;
+}

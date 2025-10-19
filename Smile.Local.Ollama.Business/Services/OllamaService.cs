@@ -229,7 +229,7 @@ namespace Smile.Local.Ollama.Business.Services
                 byte[] bytes = new BinaryReader(stream).ReadBytes((int)stream.Length);
                 string encoded = Convert.ToBase64String(bytes);
 
-                var url = baseUrl + "api/generate"; ;
+                var url = baseUrl + "api/generate";
 
                 var req = new ImageRequest()
                 {

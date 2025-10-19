@@ -1,0 +1,199 @@
+﻿@page "/diagram"
+@using Smile.Local.Ollama.Agent.Components.Controls
+@using Smile.Local.Ollama.Agent.Components.Models
+@using Smile.Local.Ollama.Agent.Components.Properties
+@inject IJSRuntime JS
+@rendermode InteractiveServer
+
+<h3>Diagram Creator</h3>
+<div>
+    <button @onclick="() => AddChat()">Add Chat Init</button>
+    <button @onclick="() => AddScheduled()">Add Scheduled Init</button>
+    <button @onclick="() => AddAgent()">Add Agent</button>
+    <button @onclick="() => AddPlugin()">Add Plugin</button>
+    <button @onclick="ExportDiagram">Export JSON</button>
+
+    @if (SelectedShapeIds.Count == 2)
+    {
+        <button @onclick="ConnectSelected">Connect</button>
+        <button @onclick="DisconnectSelected">Disconnect</button>
+    }
+</div>
+
+<SlidingPanel @ref="PanelRef" IsOpen="@panelOpen" IsOpenChanged="@((bool val) => panelOpen = val)" ShapeType="ShapeType">
+    
+</SlidingPanel>
+
+<div class="canvas" @ref="CanvasRef">
+  <svg class="connector-layer">
+    @foreach (var conn in diagram.Connectors)
+    {
+        var from = GetShape(conn.FromId);
+        var to = GetShape(conn.ToId);
+        if (from != null && to != null)
+        {
+            <ConnectorComponent FromShape="from" ToShape="to" />
+        }
+    }
+  </svg>
+
+    @foreach (var shape in diagram.Shapes)
+  {
+    <ShapeComponent Shape="shape" OnPositionChanged="UpdatePosition" OnShapeSelected="HandleShapeSelected" NumberSelected="NumberSelected" OpenSlider="OpenSlider" />
+  }
+</div>
+
+@code {
+    ElementReference CanvasRef;
+    SlidingPanel PanelRef;
+
+    Smile.Local.Ollama.Agent.Components.Models.Diagram diagram = new Smile.Local.Ollama.Agent.Components.Models.Diagram();
+
+    List<string> SelectedShapeIds = new();
+
+    ShapeType ShapeType;
+
+    List<ValidShape> valids = new List<ValidShape>();
+
+    protected override void OnInitialized()
+    {
+        valids.Add(new ValidShape() { From = ShapeType.ChatInit, To = ShapeType.Agent });
+
+        base.OnInitialized();
+    }
+
+    int NumberSelected = 0;
+    bool panelOpen = false;
+
+    void AddShape(ShapeType type)
+    {
+        var shape = new DiagramShape
+        {
+            Id = Guid.NewGuid().ToString(),
+            ShapeType = type
+        };
+
+        if (type == ShapeType.Agent)
+        {
+            shape.Shape = "rectangle";
+            shape.Label = "Agent";
+        }
+        else if (type == ShapeType.Plugin)
+        {
+            shape.Shape = "circle";
+            shape.Label = "Plugin";
+        }
+        else if (type == ShapeType.ChatInit)
+        {
+            shape.Shape = "rectangle";
+            shape.Label = "Chat";
+        }
+        else if (type == ShapeType.ScheduledInit)
+        {
+            shape.Shape = "rectangle";
+            shape.Label = "Scheduled";
+        }
+
+        diagram.Shapes.Add(shape);
+
+        StateHasChanged();
+    }
+
+    void AddAgent() => AddShape(ShapeType.Agent);
+    void AddPlugin() => AddShape(ShapeType.Plugin);
+    void AddChat() => AddShape(ShapeType.ChatInit);
+    void AddScheduled() => AddShape(ShapeType.ScheduledInit);
+
+    void UpdatePosition((string id, double x, double y) update)
+    {
+        var shape = diagram.Shapes.FirstOrDefault(s => s.Id == update.id);
+        if (shape is not null)
+        {
+            shape.X = update.x;
+            shape.Y = update.y;
+        }
+    }
+
+    DiagramShape GetShape(string id) => diagram.Shapes.FirstOrDefault(s => s.Id == id);
+
+    async Task ExportDiagram()
+    {
+        var json = System.Text.Json.JsonSerializer.Serialize(diagram);
+        await JS.InvokeVoidAsync("console.log", json);
+        await JS.InvokeVoidAsync("alert", "Diagram exported to console.");
+    }
+
+    void HandleShapeSelected(string id)
+    {
+        if (SelectedShapeIds.Contains(id))
+        {
+            SelectedShapeIds.Remove(id);
+            NumberSelected--;
+        }
+        else{
+            SelectedShapeIds.Add(id);
+            NumberSelected++;
+        }
+
+        // Optional: limit to 2 selections
+        if (SelectedShapeIds.Count > 2)
+            SelectedShapeIds.RemoveAt(0);   
+
+        StateHasChanged();
+    }
+
+    async void ConnectSelected()
+    {
+        var from = SelectedShapeIds[0];
+        var to = SelectedShapeIds[1];
+
+        bool valid = true;
+
+        var fromShape = diagram.Shapes.Where(x => x.Id == from).First();
+        var toShape = diagram.Shapes.Where(x => x.Id == to).First();
+
+        var validShape = valids.Where(x => x.From == fromShape.ShapeType && x.To == toShape.ShapeType).FirstOrDefault();
+
+        if(validShape != null)
+        {
+            if (!diagram.Connectors.Any(c => c.FromId == from && c.ToId == to))
+            {
+                diagram.Connectors.Add(new Connector { FromId = from, ToId = to });
+            }
+        }
+        else
+        {
+            validShape = valids.Where(x => x.To == fromShape.ShapeType && x.From == toShape.ShapeType).FirstOrDefault();
+
+            if (validShape != null && !diagram.Connectors.Any(c => c.FromId == to && c.ToId == from))
+            {
+                var res = await JS.InvokeAsync<bool>("confirm", $"Invalid connection from {fromShape.ShapeType} to {toShape.ShapeType}, Did you mean the other way round?");
+
+                if (res)
+                {
+                    diagram.Connectors.Add(new Connector { FromId = to, ToId = from });
+                }
+
+                StateHasChanged();
+
+                return;
+            }
+
+            await JS.InvokeVoidAsync("alert", $"Invalid connection from {fromShape.ShapeType} to {toShape.ShapeType}");
+        }
+    }
+
+    void DisconnectSelected()
+    {
+        var from = SelectedShapeIds[0];
+        var to = SelectedShapeIds[1];
+        diagram.Connectors.RemoveAll(c => c.FromId == from && c.ToId == to);
+    }
+
+    void OpenSlider(ShapeType shapeType) 
+    {
+        ShapeType = shapeType;
+
+        panelOpen = true; 
+    }
+}

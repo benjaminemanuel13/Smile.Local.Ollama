@@ -1,0 +1,19 @@
+﻿@using Smile.Local.Ollama.Agent.Components.Models
+
+<line x1="@(FromShape.X + 50)" y1="@(FromShape.Y + 30)"
+      x2="@(ToShape.X + 50)" y2="@(ToShape.Y + 30)"
+      stroke="black" stroke-width="2" />
+
+<text x="@((FromShape.X + ToShape.X) / 2)" y="@((FromShape.Y + ToShape.Y) / 2 - 10)"
+fill="black" font-size="12" text-anchor="middle" />
+
+@Connector?.Label
+
+
+
+@code {
+    [Parameter] public DiagramShape FromShape { get; set; }
+    [Parameter] public DiagramShape ToShape { get; set; }
+
+    [Parameter] public Connector Connector { get; set; }
+}

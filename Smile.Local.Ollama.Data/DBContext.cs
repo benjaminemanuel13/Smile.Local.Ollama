@@ -77,8 +77,6 @@ namespace Smile.Local.Ollama.Data
             cmd.Parameters.Add(new SqlParameter("@text", text));
             cmd.Parameters.Add(new SqlParameter("@threshold", 0.45));
 
-            //cmd.Parameters.Add(new SqlParameter("@embeddings", JsonSerializer.Serialize(embeddings)));
-
             var recs = cmd.ExecuteReader();
 
             List<string> result = new List<string>();

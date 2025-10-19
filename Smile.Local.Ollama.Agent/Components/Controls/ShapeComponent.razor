@@ -1,0 +1,66 @@
+﻿@using Smile.Local.Ollama.Agent.Components.Models
+@using static Smile.Local.Ollama.Agent.Components.Pages.Diagram
+@inject IJSRuntime JS
+
+<div style="text-align: center;" class="shape @Shape.Shape @(Shape.IsSelected ? "selected" : "")" @ref="ShapeRef" @ondblclick="ToggleSelection">
+    @Shape.Label <br/>
+    <a href="javaScript: none" style="font-size: 10px;" @onclick="() => Edit(Shape)">Edit</a>
+</div>
+
+@code {
+    [Parameter] public DiagramShape Shape { get; set; }
+    [Parameter] public EventCallback<(string id, double x, double y)> OnPositionChanged { get; set; }
+
+    [Parameter] public EventCallback<ShapeType> OpenSlider { get; set; }
+
+    [Parameter] public EventCallback<string> OnShapeSelected { get; set; }
+
+    [Parameter] public int NumberSelected { get; set; }
+
+    void ToggleSelection()
+    {
+        if (NumberSelected < 2)
+        {
+            Shape.IsSelected = !Shape.IsSelected;
+            OnShapeSelected.InvokeAsync(Shape.Id);
+        }
+        else if(Shape.IsSelected)
+        {
+            Shape.IsSelected = !Shape.IsSelected;
+            OnShapeSelected.InvokeAsync(Shape.Id);
+        }
+    }
+
+    private async void Edit(DiagramShape shape)
+    {
+        await OpenSlider.InvokeAsync(shape.ShapeType);
+    }
+
+    ElementReference ShapeRef;
+    DotNetObjectReference<ShapeComponent> objRef;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            objRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("dragInterop.enableDrag", ShapeRef, objRef, Shape.Id);
+        }
+    }
+
+    [JSInvokable]
+    public async Task OnDrag(string id, double x, double y)
+    {
+        Shape.X = x;
+        Shape.Y = y;
+
+        await OnPositionChanged.InvokeAsync((id, x, y));
+
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        objRef?.Dispose();
+    }
+}

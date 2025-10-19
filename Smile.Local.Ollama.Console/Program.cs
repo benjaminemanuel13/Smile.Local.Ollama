@@ -15,6 +15,8 @@ namespace Smile.Local.Ollama
             .ConfigureServices((hostContext, services) =>
             {
                 services.AddTransient<IDBContext, DBContext>();
+                services.AddTransient<IPdfDocumentService, PdfDocumentService>();
+                services.AddTransient<IWordDocumentService, WordDocumentService>();
                 services.AddTransient<IOllamaService, OllamaService>();
                 services.AddHostedService<Worker>();
             }).Start();

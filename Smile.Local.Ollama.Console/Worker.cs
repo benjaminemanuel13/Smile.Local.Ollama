@@ -25,6 +25,8 @@ namespace Smile.Local.Ollama.Console
             while (entry != "quit")
             {
                 _ollama.Ask(entry, WriteOut).Wait();
+                
+                // , "hf.co/microsoft/bitnet-b1.58-2B-4T-gguf"
 
                 System.Console.WriteLine();
                 System.Console.WriteLine();
