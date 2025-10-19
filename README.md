@@ -15,6 +15,8 @@ and the models I am using are "mxbai-embed-large" for embeddings and "phi4" for 
 
 Ollama is now working with Documents, but only implemented with the CLI project. (see Smile.Local.Ollama.CLI)
 
+Have just added Image analysis.
+
 **CLI Commands**
 
 Rename Smile.Local.Ollama.CLI.exe to smile.exe and
@@ -32,6 +34,9 @@ smile ask "Your question"
 
 smile ask-documents "Your question"
 
+smile analyse "path to image file" "prompt"
+
+
 **Remember**
 
 You need the Smile.Local.Ollama web project running to use smile.exe
@@ -39,3 +44,16 @@ You need the Smile.Local.Ollama web project running to use smile.exe
 **Contact Me**
 
 If you have found this useful please let me know at: **benjaminemanuel13@gmail.com**
+
+**Coming Soon**
+
+Soon I hope to use not just documents as data source but also CSV and Json files as well
+as Stored Procedures (SQL Server) as data sources.
+
+This would mean having a command such as:
+
+smile upload-data "Path to file to upload" "This would be a sentence or two to describe the data for vector search"
+
+&
+
+smile ask-data "Your question"
